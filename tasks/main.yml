@@ -25,12 +25,12 @@
     group=root
   notify: restart apache
 
-- name: Create a test repository.
+- name: Create a initial repository.
   command: >
-    svnadmin create testrepo
+    svnadmin create {{ svn_initial_repository }}
     chdir={{ svn_repository_home }}
-    creates={{ svn_repository_home }}/testrepo/README.txt
-  when: svn_create_test_repo
+    creates={{ svn_repository_home }}/{{ svn_initial_repository }}/README.txt
+  when: svn_create_initial_repo
 
 - name: Set ownership for svn directories.
   file: >
@@ -39,6 +39,9 @@
     group=apache
     recurse=yes
   notify: restart apache
+
+- name: Creates Subversion directory
+  file: path=/var/svn state=directory
 
 # TODO: Is there any way to specify `--root {{ svn_repository_home }}`? Environment?
 - name: Ensure svnserve service is started.

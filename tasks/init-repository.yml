@@ -1,0 +1,14 @@
+---
+- name: Create a initial repository.
+  command: >
+    svnadmin create {{ svn_initial_repository }}
+    chdir=/var/www/svn
+    creates=/var/www/svn/{{ svn_initial_repository }}/README.txt
+
+- name: Set ownership for initial repository.
+  file: >
+    path=/var/www/svn
+    owner=apache
+    group=apache
+    recurse=yes
+  notify: restart apache
